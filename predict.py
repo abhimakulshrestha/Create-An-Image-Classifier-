@@ -66,11 +66,18 @@ def process_image(image):
 
 def predict(image_path, model, topk):
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
     input_img = process_image(image_path)
     input_img = input_img.unsqueeze_(0)
     input_img = input_img.float()
 
+    input_img = input_img.to(device)
+    model.to(device)
+    
     output = model(input_img)
+
+    output = output.cpu()
 
     probability = F.softmax(output.data,dim=1)
 
