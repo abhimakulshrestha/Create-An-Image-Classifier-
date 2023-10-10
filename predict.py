@@ -92,13 +92,10 @@ def main():
     top_k = args.top_k
     category_names = args.category_names
 
-    with open(args.category_names, 'r') as json_file:
-        cat_to_name = json.load(json_file)
-
-    model = load_checkpoint(checkpoint_dir)
+     model, cat_to_name = load_checkpoint(checkpoint_dir, category_names)
 
     image_tensor = process_image(args.image_dir)
-
+    
     ps = predict(image_dir, model, top_k)
     labels = [cat_to_name[str(index + 1)] for index in np.array(ps[1][0])]
     probability = np.array(ps[0][0])
